@@ -1,1 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Metals Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+    /* Dark Theme Base */
+    body { 
+        background-color: #0b0e11; 
+        color: #f0f2f5; 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        letter-spacing: -0.02em;
+    }
 
+    /* Professional Dashboard Header */
+    header h1 {
+        background: linear-gradient(90deg, #fff, #888);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        text-transform: capitalize;
+    }
+
+    /* Glassmorphism Cards */
+    .card { 
+        background: #d3f0dc; 
+        border: 1px solid #a6bce4; 
+        border-radius: 12px; 
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Subtle glow on hover */
+    .card:hover { 
+        transform: translateY(-5px); 
+        border-color: #4a4f5a;
+        box-shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+/* Color for the AI Prediction Number */
+.text-target {
+    color: #09035c !important; /* A bright, techy Cyan */
+    text-shadow: 0 0 8px rgba(0, 212, 255, 0.3); /* Subtle glow */
+}
+
+/* If you want the Current Price to be a clean white */
+.display-6 {
+    color: #056812;
+}
+
+/* If you want the "Current Price" label to be more subtle */
+.text-muted {
+    color: #000103 !important;
+}
+    /* Left-side accent borders for Gold and Silver */
+    .card-gold { border-left: 4px solid #f2a900; }
+    .card-silver { border-left: 4px solid #949ba1; }
+
+    /* Custom Text Colors */
+    .text-success { color: #00ec96 !important; } /* Neon Mint */
+    .text-danger { color: #ff3a52 !important; }  /* Electric Coral */
+    .text-muted { color: #707a8a !important; }
+
+    /* Accuracy Badge Styling */
+    .badge-accuracy { 
+        font-size: 0.7rem; 
+        font-weight: 600;
+        background: rgba(255, 255, 255, 0.05); 
+        color: #03285e; 
+        border: 1px solid #c3ecf3;
+        border-radius: 4px; 
+        padding: 4px 10px;
+        text-transform: uppercase;
+    }
+
+    /* Target Box */
+    .target-box {
+        background: rgba(209, 7, 7, 0.02);
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    hr { border-color: #2b2f36; opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="container py-5">
+    <header class="text-center mb-5">
+        <h1 class="display-4 fw-bold">AI Gold and Silver Price Forecast </h1>
+        <p class="text-muted">Live Analysis • XDH • Seattle • March 31, 2026</p>
+    </header>
+
+    <div class="row g-4">
+        {% for metal in [gold, silver] %}
+        <div class="col-lg-6">
+            <div class="card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h2 class="h4 mb-0">{{ metal.name }} <span class="text-muted small">({{ metal.symbol }})</span></h2>
+                    <span class="badge-accuracy">Model Accuracy: {{ metal.accuracy }}%</span>
+                </div>
+                <hr>
+                <div class="row align-items-center">
+                    <div class="col-7">
+                        <div class="mb-1 text-muted small">Current Price</div>
+                        <h3 class="display-6 fw-bold mb-0">${{ "{:,.2f}".format(metal.current) }}</h3>
+                        <p class="mt-2 fw-bold text-{{ metal.color }}">
+                            {{ metal.trend }} ({{ "{:+.2f}".format(metal.pct) }}%)
+                        </p>
+                    </div>
+                    <div class="col-5">
+                        <canvas id="chart-{{ metal.name|lower }}" height="80"></canvas>
+                    </div>
+                </div>
+                <div class="mt-3 pt-3 border-top border-secondary text-muted">
+                    <div class="d-flex justify-content-between small">
+                        <span>AI Target (Tomorrow):</span>
+                        <span class="text-target fw-bold">${{ "{:,.2f}".format(metal.pred) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    function renderSparkline(canvasId, dataPoints, trendColor) {
+        new Chart(document.getElementById(canvasId), {
+            type: 'line',
+            data: {
+                labels: Array(dataPoints.length).fill(''),
+                datasets: [{
+                    data: dataPoints,
+                    borderColor: trendColor,
+                    borderWidth: 3,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+    }
+
+    // Initialize Charts
+    renderSparkline('chart-gold', {{ gold.history | tojson }}, '{{ "#00ff88" if gold.trend == "UP" else "#ff4d4d" }}');
+    renderSparkline('chart-silver', {{ silver.history | tojson }}, '{{ "#00ff88" if silver.trend == "UP" else "#ff4d4d" }}');
+</script>
+
+</body>
+</html>
