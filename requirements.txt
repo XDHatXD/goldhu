@@ -1,0 +1,13 @@
+flask
+
+
+yfinance
+
+
+pandas
+
+
+scikit-learn
+
+
+gunicorn
