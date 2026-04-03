@@ -133,15 +133,8 @@ def home():
     iau = get_market_data("IAU", "Gold ETF")
     slv = get_market_data("SLV", "Silver ETF")
     return render_template('index.html', gold=gold, silver=silver, iau=iau, slv=slv)
-
 if __name__ == '__main__':
-from flask import Flask, render_template
-import yfinance as yf
-import pandas as pd
-import numpy as np
-from rgf.sklearn import RGFRegressor
-from sklearn.metrics import mean_absolute_percentage_error
-import warnings
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 warnings.filterwarnings("ignore", category=UserWarning, module="rgf.utils")
 
