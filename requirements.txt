@@ -1,13 +1,6 @@
 flask
-
-
 yfinance
-
-
 pandas
-
-
 scikit-learn
-
-
 gunicorn
+rgf_python
