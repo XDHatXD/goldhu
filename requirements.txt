@@ -1,6 +1,14 @@
+<<<<<<< HEAD
 flask
 yfinance
 pandas
 scikit-learn
 gunicorn
+=======
+flask
+yfinance
+pandas
+scikit-learn
+gunicorn
+>>>>>>> 64c7b99d3d7e87bdaacbb27b8181354c6ba958e5
 rgf_python
