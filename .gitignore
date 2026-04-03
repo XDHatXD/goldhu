@@ -1,5 +1,14 @@
+# Virtual Environment
 .venv-1/
-.vscode/
+venv/
+env/
+
+# Python Cache
 __pycache__/
 *.pyc
+
+# Editor Settings
+.vscode/
+
+# Environment Variables
 .env
