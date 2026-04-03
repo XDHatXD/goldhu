@@ -262,7 +262,6 @@ def get_market_data(symbol, name):
         "hist_actual": round(actual_today, 2), "hist_diff": round(diff, 2),
         "hist_error": round(error_pct, 2)
     }
-
 @app.route('/')
 def home():
     gold = get_market_data("GC=F", "Gold")
@@ -272,4 +271,5 @@ def home():
     return render_template('index.html', gold=gold, silver=silver, iau=iau, slv=slv)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Using 0.0.0.0 allows Render to 'see' the app externally
+    app.run(host='0.0.0.0', port=5000, debug=True)
